@@ -1,10 +1,12 @@
 {
   "reconstruction" : true,
   "reconstruction_cfg" : {
-    "runfile" : "cfg/reconstruction_cfg/default/test_frog_fast.json",
+    "runfile" : "Open3D/examples/Python/ReconstructionSystem/run_system.py",
+    "config" : "cfg/reconstruction/default/test_frog_fast.json",
     "make" : true,
     "register" : true,
     "refine" : true,
-    "integrate" : true
+    "integrate" : true,
+    "debug_mode" : false
   }
 }

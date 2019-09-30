@@ -21,6 +21,7 @@ def get_project_root_dir(cwd_path):
     else:
         return ""
 
+
 def sorted_alphanum(file_list_ordered):
     convert = lambda text: int(text) if text.isdigit() else text
     alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
@@ -70,6 +71,12 @@ def make_clean_folder(path_folder):
 
 
 def check_folder_structure(path_dataset):
+    print()
+    print()
+    print()
+    print()
+    print(len(path_dataset))
+    print(path_dataset)
     path_color, path_depth = get_rgbd_folders(path_dataset)
     assert exists(path_depth), \
             "Path %s is not exist!" % path_depth
