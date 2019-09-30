@@ -19,7 +19,7 @@ Open3D library by Intel labs. Open3D project is similar to the famous OpenCV, ac
 ```bash
 git clone --recurse-submodules https://github.com/SoftServeSAG/3d_reconstruction
 ``` 
-1. Install 
+1. Install required libraries for python.
 1. Download sample dataset using script from /datasets or register own data. # TODO add support for data collection
 1. Run pipeline:
 ```bash
@@ -34,11 +34,11 @@ As there are version of open3d available from standard package management system
 pip install open3d
 ```
 but for new features the best is to compile it from sources published on their github. {!REF!} Following instructions {!REF!}.
-Open3D repo version is available here as subrepo.
+Open3D repo version is available here as module.
 
 - TODO : add detailed guide, mention CUDA version
 
-### Config building policy
+### Config policy
 - TODO : write about 
 
 --- 
@@ -85,19 +85,19 @@ Perform recording of good data with hand-held RGB-D camera is tricky but possibl
  - TODO
  
 ## RGB-D cameras overview and deployment tips
- - D415
- - SR340
+ - RealSense D415
+ - RealSense SR340
  - KinectV2
- - Intel ???
+ - RealSense R200
  
 ## Preprocessing images
 
 Cleaning outlier blobs:
 <!--  <Show images with filtering and failcase without it> -->
-    In process of reconstruction using "invisible material" reconstruction does not require filterign background and preprocessing generaly can be ommited. But as working environment always imperfect, due to lighting conditions, used material, its angle and wrinkles some parts of it are occasionaly captured. Those non-informative artifacts harm reconstruction pipeline as if they belong to reconstruction fragments they can make the resulting matching impossible.
-    As background generally clearly distinguishable from the object itself we can manage it with pretty straitforward pipeline of preprocessing methods. 
+    In the process of reconstruction using "invisible material" reconstruction does not require filtering background and preprocessing suppose to be omitted. But as a real-world working environment is always imperfect, due to lighting conditions, using the material, its angle, and wrinkles some parts of it are occasionally captured. Those non-informative artifacts harm reconstruction pipeline as if they belong to reconstruction fragments they can make the resulting matching impossible.
+    As background generally clearly distinguishable from the object itself we can manage it with a pretty straightforward pipeline of preprocessing methods. 
     - Filtering registration artifacts
-    - Improve balance of colour
+    - Improve the balance of color
     - Drop frames of bad quality
 
 #### Filtering registration artifacts:
