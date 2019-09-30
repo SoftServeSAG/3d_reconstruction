@@ -1,0 +1,10 @@
+{
+  "reconstruction" : true,
+  "reconstruction_cfg" : {
+    "runfile" : "cfg/reconstruction_cfg/default/test_frog_fast.json",
+    "make" : true,
+    "register" : true,
+    "refine" : true,
+    "integrate" : true
+  }
+}

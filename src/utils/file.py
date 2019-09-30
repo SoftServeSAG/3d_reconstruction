@@ -5,10 +5,21 @@
 # examples/Python/Utility/file.py
 
 from os import listdir, makedirs
+import os
 from os.path import exists, isfile, join, splitext
 import shutil
 import re
 
+PROJECT_NAME = "object_3d_reconstructon"
+
+def get_project_root_dir(cwd_path):
+    (head, tail) = os.path.split(cwd_path)
+    while tail != "" and tail != 'object_3d_reconstruction':
+        (head, tail) = os.path.split(head)
+    if len(tail) != 0:
+        return os.path.join(head, tail)
+    else:
+        return ""
 
 def sorted_alphanum(file_list_ordered):
     convert = lambda text: int(text) if text.isdigit() else text
