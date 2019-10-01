@@ -1,4 +1,4 @@
-# as basis used code from
+#  used code from
 # Open3D: www.open3d.org
 
 from os import listdir, makedirs
@@ -8,6 +8,8 @@ import shutil
 import re
 
 PROJECT_NAME = "object_3d_reconstructon"
+
+
 
 def get_project_root_dir(cwd_path, project_name):
     (head, tail) = os.path.split(cwd_path)

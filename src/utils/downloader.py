@@ -1,4 +1,4 @@
-# as basis used code from
+#  used code from
 # Open3D: www.open3d.org
 
 import zipfile

@@ -152,6 +152,7 @@ Here we mostly rely on pipeline proposed by Open3D specifying only config files 
 - /datasets/<dataset_name>/**depth** : Storing depth images. Format is uint16. Values mean absolute metric distance in proportion 1000:1 -- 1000 units = 1m distance, therefore 1 utit = 1 mm.
 - /datasets/<dataset_name>/**fragnents** : intermediate point cloud files and metadata..
 - /datasets/<dataset_name>/**scene** :  results of the registration process: mesh.ply file - 3D mesh, other artifacts like a log with camera trajectory and etc. metadata... #TODO maybe change "scene" to an "object" or so?
+- /datasets/<dataset_name>/**logs** :  directory for stroring expreiment runtime data a.e. execution time and configuration used
 - /datasets/<dataset_name>/**camera_intrinsic**.json : a conventional place to store the file with registering camera parameters. (#TODO add to gitWiki about it)
 - /datasets/<dataset_name>/**<_some_directory_name_with_suffix_>** : used to store results of preprocessing not to conflict with original filenames. 
 - /datasets/**<dataset_name>_downloader.sh** : scripts for downloading samples [#TODO provide example, now only for partners (private before release)]
