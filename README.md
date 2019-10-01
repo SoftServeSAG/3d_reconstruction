@@ -3,7 +3,7 @@ Demo on object reconstruction using Open3D pipeline for the environment reconstr
 
 Object reconstruction pipeline for Consumer Depth Cameras
  
-###Introduction
+### Introduction
 Selected technology:
 
 Open3D library by Intel labs. Open3D project is similar to the famous OpenCV, accepts the opensource contribution.
@@ -13,7 +13,7 @@ Open3D library by Intel labs. Open3D project is similar to the famous OpenCV, ac
 
 ---
 
-##How to use
+## How to use
 
 1. Clone this project code using following:
 ```bash
@@ -33,10 +33,46 @@ As there are version of open3d available from standard package management system
 ```bash
 pip install open3d
 ```
-but for new features the best is to compile it from sources published on their github. {!REF!} Following instructions {!REF!}.
+but for new features the best is to compile it from sources published on [the Open3D project GitHub page](https://github.com/intel-isl/Open3D) . Following [compiling instructions](http://www.open3d.org/docs/release/compilation.html).
 Open3D repo version is available here as module.
 
 - TODO : add detailed guide, mention CUDA version
+
+
+## Files content
+- /**cfg** : config files. We are trying not to use hardcoded parameters in scripts.
+    - /cfg/**camera_presets** : files with settings (presets) for the cameras to use in registration part (#TODO add description and explain)
+- /**Open3D** : subrepo Open3D should be placed linked into the main directory of this repo. If you want to use another place, please use symlinks.
+- /**srs** 
+    - /srs/**scripts** : scripts related to Object 3D reconstruction
+      - /srs/scripts/**run_object_reconstruction.py** : entry point for the whole pipeline
+      - /src/scripts/**<other_scripts_names>** : slave scripts for processing stages and features
+    - /src/**utils** : general-purpose scripts for work with filesystem and plumbing for main pipeline scripts
+- /**datasets** : link to directories with data and where processed results are stored by default
+   the structure is similar to used by Open3D:
+   - /datasets/<dataset_name>/**[color | rgb | image ]** -- directory for RGB images, naming should contain a valid index of fixed length to provide absolute ordering when sorted in lexicographical order:
+   
+   
+```jaml
+ Ok: {... 000008.jpg, 000009.jpg, 000010.jpg } 
+
+ Wrong: { ... 8.jpg, 9.jpg, 10.jpg (sorted will be: 1.jpg, 10.jpg, 2.jpg ... ) }
+```
+   
+- /datasets/<dataset_name>/**depth** : Storing depth images. Format is uint16. Values mean absolute metric distance in proportion 1000:1 -- 1000 units = 1m distance, therefore 1 utit = 1 mm.
+- /datasets/<dataset_name>/**fragnents** : intermediate point cloud files and metadata..
+- /datasets/<dataset_name>/**scene** :  results of the registration process: mesh.ply file - 3D mesh, other artifacts like a log with camera trajectory and etc. metadata... #TODO maybe change "scene" to an "object" or so?
+- /datasets/<dataset_name>/**logs** :  directory for stroring expreiment runtime data a.e. execution time and configuration used
+- /datasets/<dataset_name>/**camera_intrinsic**.json : a conventional place to store the file with registering camera parameters. (#TODO add to gitWiki about it)
+- /datasets/<dataset_name>/**<_some_directory_name_with_suffix_>** : used to store results of preprocessing not to conflict with original filenames. 
+- /datasets/**<dataset_name>_downloader.sh** : scripts for downloading samples [#TODO provide example, now only for partners (private before release)]
+
+- /**requirements.txt** : file with required packages for python listed.
+    
+   ```bash
+    $ pip install -r requirements.txt 
+  ```
+
 
 ### Config policy
 - TODO : write about 
@@ -128,37 +164,3 @@ Here we mostly rely on pipeline proposed by Open3D specifying only config files 
 ## Colormap optimisation
 - TODO
 ---
-
-## Files content
-- /**cfg** : config files. We are trying not to use hardcoded parameters in scripts.
-    - /cfg/**camera_presets** : files with settings (presets) for the cameras to use in registration part (#TODO add description and explain)
-- /**Open3D** : subrepo Open3D should be placed linked into the main directory of this repo. If you want to use another place, please use symlinks.
-- /**srs** 
-    - /srs/**scripts** : scripts related to Object 3D reconstruction
-      - /srs/scripts/**run_object_reconstruction.py** : entry point for the whole pipeline
-      - /src/scripts/**<other_scripts_names>** : slave scripts for processing stages and features
-    - /src/**utils** : general-purpose scripts for work with filesystem and plumbing for main pipeline scripts
-- /**datasets** : link to directories with data and where processed results are stored by default
-   the structure is similar to used by Open3D:
-   - /datasets/<dataset_name>/**[color | rgb | image ]** -- directory for RGB images, naming should contain a valid index of fixed length to provide absolute ordering when sorted in lexicographical order:
-   
-   
-   ```jaml
- Ok: {... 000008.jpg, 000009.jpg, 000010.jpg } 
-
- Wrong: { ... 8.jpg, 9.jpg, 10.jpg (sorted will be: 1.jpg, 10.jpg, 2.jpg ... ) }
-```
-   
-- /datasets/<dataset_name>/**depth** : Storing depth images. Format is uint16. Values mean absolute metric distance in proportion 1000:1 -- 1000 units = 1m distance, therefore 1 utit = 1 mm.
-- /datasets/<dataset_name>/**fragnents** : intermediate point cloud files and metadata..
-- /datasets/<dataset_name>/**scene** :  results of the registration process: mesh.ply file - 3D mesh, other artifacts like a log with camera trajectory and etc. metadata... #TODO maybe change "scene" to an "object" or so?
-- /datasets/<dataset_name>/**logs** :  directory for stroring expreiment runtime data a.e. execution time and configuration used
-- /datasets/<dataset_name>/**camera_intrinsic**.json : a conventional place to store the file with registering camera parameters. (#TODO add to gitWiki about it)
-- /datasets/<dataset_name>/**<_some_directory_name_with_suffix_>** : used to store results of preprocessing not to conflict with original filenames. 
-- /datasets/**<dataset_name>_downloader.sh** : scripts for downloading samples [#TODO provide example, now only for partners (private before release)]
-
-- /**requirements.txt** : file with required packages for python listed.
-    
-   ```bash
-    $ pip install -r requirements.txt 
-  ```
