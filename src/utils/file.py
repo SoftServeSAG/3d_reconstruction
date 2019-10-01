@@ -1,8 +1,5 @@
+# as basis used code from
 # Open3D: www.open3d.org
-# The MIT License (MIT)
-# See license file or visit www.open3d.org for details
-
-# examples/Python/Utility/file.py
 
 from os import listdir, makedirs
 import os
@@ -72,12 +69,6 @@ def make_clean_folder(path_folder):
 
 
 def check_folder_structure(path_dataset):
-    print()
-    print()
-    print()
-    print()
-    print(len(path_dataset))
-    print(path_dataset)
     path_color, path_depth = get_rgbd_folders(path_dataset)
     assert exists(path_depth), \
             "Path %s is not exist!" % path_depth

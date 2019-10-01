@@ -1,8 +1,5 @@
+# as basis used code from
 # Open3D: www.open3d.org
-# The MIT License (MIT)
-# See license file or visit www.open3d.org for details
-
-# examples/Python/Utility/visualization.py
 
 import copy
 import open3d as o3d

@@ -10,12 +10,8 @@ from pprint import pprint
 sys.path.append(".")
 sys.path.append("../")
 
-# sys.path.append("utils")
 from utils.file import check_folder_structure, get_project_root_dir
 from utils.object_reconstruction_config import get_config
-
-import subprocess
-
 
 def make_stats():
     stats = {
@@ -30,30 +26,24 @@ def make_stats():
     }
     return stats
 
-# def run_stage_with(stage_filename, args):
 
-def add_datapath_to_cfg(reconstruction_config_filename, main_cfg):
-    if 'home' not in reconstruction_config_filename:  # case if abs path used
-        reconstruction_config_filename = os.path.join( main_cfg['project_root'],
-                                                       reconstruction_config_filename)
+def specify_config_pathes(subconfig_filename, main_cfg, updated_config_filename):
+    if 'home' not in subconfig_filename:  # case if abs path used
+        subconfig_filename = os.path.join(main_cfg['project_root'],
+                                          subconfig_filename)
 
-    reconstruction_cfg = get_config(reconstruction_config_filename)
-    reconstruction_cfg['path_dataset'] = os.path.join( main_cfg['project_root'],
+    subconfig = get_config(subconfig_filename)
+    subconfig['path_dataset'] = os.path.join( main_cfg['project_root'],
                                                        main_cfg['path_dataset']
                                                        )
 
-    reconstruction_cfg['path_intrinsic'] = os.path.join( main_cfg['project_root'],
+    subconfig['path_intrinsic'] = os.path.join( main_cfg['project_root'],
                                                          main_cfg['path_intrinsic']
                                                          )
 
-    abspath_reconstruction_config_filename = os.path.join(os.path.split(reconstruction_config_filename)[0],
-                                                          'reconstruction.json'
-                                                          )
+    with open(updated_config_filename, 'w') as json_file:
+        json.dump(subconfig, json_file, indent=4, sort_keys=True)
 
-    with open(abspath_reconstruction_config_filename, 'w') as json_file:
-        json.dump(reconstruction_cfg, json_file, indent=4, sort_keys=True)
-
-    return abspath_reconstruction_config_filename
 
 def log_stats(stats, config):
     pprint(stats)
@@ -63,7 +53,8 @@ def log_stats(stats, config):
     )
     if not os.path.exists(logs_dir):
         os.makedirs(logs_dir)
-    log_filename = "blah_log.json"
+    timestamp = datetime.datetime.now().strftime("%d-%m-%Y_%I-%M-%S_%p")
+    log_filename = "{}_stats_{}.json".format(config['project_name'], timestamp)
     log_path = os.path.join(logs_dir, log_filename)
     print("Storing log to file [{}]".format(log_path) )
     with open(log_path, 'w') as json_file:
@@ -73,22 +64,23 @@ PROJECT_NAME = "object_3d_reconstruction"
 DEFAULT_CONFIFG_FILENAME = 'cfg/reconstruction/default/main.json'
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Object reconstruction pipeline launcher")
+    parser.add_argument("--config", help="path to the config file")
+    args = parser.parse_args()
+    config_filename = DEFAULT_CONFIFG_FILENAME
+    if args.config is not None:
+        config_filename = args.config
 
-    print(sys.path)
-
-    #  TODO add config name argument
-    print("Hello from main launcher")
     project_root = get_project_root_dir(os.getcwd(), PROJECT_NAME)
 
-    condig_file_fullpath = DEFAULT_CONFIFG_FILENAME
-    if PROJECT_NAME not in DEFAULT_CONFIFG_FILENAME and 'home' not in DEFAULT_CONFIFG_FILENAME:
-        condig_file_fullpath = os.path.join(project_root, DEFAULT_CONFIFG_FILENAME)
+    condig_file_fullpath = config_filename
+    if PROJECT_NAME not in config_filename and 'home' not in config_filename:
+        condig_file_fullpath = os.path.join(project_root, config_filename)
 
     config = get_config(condig_file_fullpath)
     config['project_root'] = project_root
 
     stats = make_stats()
-    log_stats(stats, config)
 
     if config['reconstruction']:
         reconstruction_args = config['reconstruction_args']
@@ -97,18 +89,19 @@ if __name__ == "__main__":
         if 'home' not in reconstruction_runner_filename:  # case if abs path used
             reconstruction_runner_filename = os.path.join(project_root, reconstruction_runner_filename)
 
-        # reconstruction_config_with_relative_pathes = reconstruction_args['config']
-        # if 'home' not in reconstruction_config_with_relative_pathes:  # case if abs path used
-        #     reconstruction_config_with_relative_pathes = os.path.join(project_root, reconstruction_config_with_relative_pathes)
-
-
         runfile_dir, runfile_name = os.path.split(reconstruction_runner_filename)
         sys.path.append(runfile_dir)
         os.chdir(runfile_dir)
 
-        abspath_reconstruction_config_filename = \
-            add_datapath_to_cfg(reconstruction_args['config'], config)
+        specified_config_filename = os.path.join(
+            config['project_root'],
+            os.path.join(os.path.dirname(reconstruction_args['config']),
+                         'reconstruction.json')
+            )
 
+        specify_config_pathes( subconfig_filename=reconstruction_args['config'],
+                               main_cfg=config,
+                               updated_config_filename=specified_config_filename)
 
         for stage_name in ['make', 'register', 'refine', 'integrate']:
             if reconstruction_args[stage_name]:
@@ -117,7 +110,7 @@ if __name__ == "__main__":
                     reconstruction_steps_flags += " --debug_mode "
                 exec_line = " ".join(["python",
                                       runfile_name,
-                                      abspath_reconstruction_config_filename,
+                                      specified_config_filename,
                                       reconstruction_steps_flags
                                       ])
                 stage_start_time = time.time()
