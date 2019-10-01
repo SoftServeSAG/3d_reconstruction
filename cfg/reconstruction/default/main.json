@@ -1,8 +1,16 @@
 {
+  "project_name" : "test_frog",
+  "debug": false,
+
+  "path_dataset": "datasets/published_test_frog/",
+  "path_intrinsic": "datasets/published_test_frog/camera_intrinsic.json",
+
   "reconstruction" : true,
-  "reconstruction_cfg" : {
+  "reconstruction_args": {
+
     "runfile" : "Open3D/examples/Python/ReconstructionSystem/run_system.py",
-    "config" : "cfg/reconstruction/default/test_frog_fast.json",
+    "config" : "cfg/reconstruction/default/test_frog_fast_prototype.json",
+
     "make" : true,
     "register" : true,
     "refine" : true,

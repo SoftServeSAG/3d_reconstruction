@@ -12,14 +12,15 @@ import re
 
 PROJECT_NAME = "object_3d_reconstructon"
 
-def get_project_root_dir(cwd_path):
+def get_project_root_dir(cwd_path, project_name):
     (head, tail) = os.path.split(cwd_path)
     while tail != "" and tail != 'object_3d_reconstruction':
         (head, tail) = os.path.split(head)
-    if len(tail) != 0:
-        return os.path.join(head, tail)
-    else:
-        return ""
+    assert len(tail) != 0,  "Unable to identify expected name of project root, expected project name [{}] in path. \
+            Change the PROJECT_NAME variable if required".format(PROJECT_NAME)
+    project_root = os.path.join(head, tail)
+    print("Project root set to [{}]".format(project_root))
+    return project_root
 
 
 def sorted_alphanum(file_list_ordered):
@@ -82,3 +83,17 @@ def check_folder_structure(path_dataset):
             "Path %s is not exist!" % path_depth
     assert exists(path_color), \
             "Path %s is not exist!" % path_color
+
+
+def write_poses_to_log(filename, poses):
+    with open(filename, 'w') as f:
+        for i, pose in enumerate(poses):
+            f.write('{} {} {}\n'.format(i, i, i + 1))
+            f.write('{0:.8f} {1:.8f} {2:.8f} {3:.8f}\n'.format(
+                pose[0, 0], pose[0, 1], pose[0, 2], pose[0, 3]))
+            f.write('{0:.8f} {1:.8f} {2:.8f} {3:.8f}\n'.format(
+                pose[1, 0], pose[1, 1], pose[1, 2], pose[1, 3]))
+            f.write('{0:.8f} {1:.8f} {2:.8f} {3:.8f}\n'.format(
+                pose[2, 0], pose[2, 1], pose[2, 2], pose[2, 3]))
+            f.write('{0:.8f} {1:.8f} {2:.8f} {3:.8f}\n'.format(
+                pose[3, 0], pose[3, 1], pose[3, 2], pose[3, 3]))
