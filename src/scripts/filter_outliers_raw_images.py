@@ -6,18 +6,16 @@ import open3d as o3d
 import cv2
 import copy
 import numpy as np
-
-# import the necessary packages
-from sklearn.cluster import MiniBatchKMeans
-from tqdm import tqdm
-
 from matplotlib import pyplot as plt
 import sys, os
+import argparse
+
+from sklearn.cluster import MiniBatchKMeans
+from tqdm import tqdm
 from time import time
 
 sys.path.append("../utils")
 from object_reconstruction_config import get_config
-
 from file import get_file_list, make_clean_folder
 
 def display_inlier_outlier(cloud, ind):
@@ -67,11 +65,14 @@ def make_masks_from_countures_for_loop(depth_images_filenames):
     return masks
 
 
-def filter_pointcloud(depth_image_path, color_image_path, config=None, debug_mode = False):
-    # TODO try adding RGBD preprocessing to this stage instead of processing integrated image
+def read_rgbd_images(depth_image_path, color_image_path, config=None, debug_mode = False):
     if config is None:
         config = {"": ""}
+    color_images = []
+    depth_images = []
     rgbd_images = []
+    camera_intrinsics = o3d.io.read_pinhole_camera_intrinsic(
+        config["path_intrinsic"])
     first = False
     for i in range( 1 ):
         print(os.path.join(depth_image_path[i]))
@@ -91,6 +92,13 @@ def filter_pointcloud(depth_image_path, color_image_path, config=None, debug_mod
 
         rgbd_images.append(rgbd_image)
     return rgbd_images
+
+
+# TODO try adding RGBD preprocessing to this stage instead of processing integrated image
+def filter_pointcloud(depth_image_path, color_image_path, config=None, debug_mode = False):
+    pass
+
+
 
 
 
@@ -176,11 +184,12 @@ def color_based_clustering_masks(image_filename, color_clustering_config, debug_
         cv2.waitKey(0)
     return masking_filtered
 
-DEFAULT_CONFIFG_FILENAME = '../../cfg/reconstruction/default/preprocessing_raw_images.json'
 
 def list_dataset_files(config):
-    input_color_path = os.path.join(config['path_dataset'], config['color_dir'])
-    input_depth_path = os.path.join(config['path_dataset'], config['depth_dir'])
+    input_color_path = os.path.join(config['path_dataset'], config['color_input_dir'])
+    input_depth_path = os.path.join(config['path_dataset'], config['depth_input_dir'])
+
+    print(input_color_path)
 
     assert os.path.exists(config['path_dataset']) and \
            os.path.exists(input_color_path) and \
@@ -197,9 +206,11 @@ def list_dataset_files(config):
 
     return color_im_filenames, depth_im_filenames
 
-if __name__ == "__main__":
+DEFAULT_CONFIFG_FILENAME = '../../cfg/reconstruction/default/preprocessing_dataset.json'
 
-    config = get_config(DEFAULT_CONFIFG_FILENAME)
+
+def launch_filter_raw_images(config):
+
     debug_mode = config['debug']
     if debug_mode:
         o3d.utility.set_verbosity_level(o3d.utility.VerbosityLevel.Debug)
@@ -210,15 +221,12 @@ if __name__ == "__main__":
     make_clean_folder(output_color_path)
     make_clean_folder(output_depth_path)
 
-    camera_intrinsics = o3d.io.read_pinhole_camera_intrinsic(config['path_intrinsic'])
-
     input_rgb_images_files, input_depth_images_files = list_dataset_files(config)
 
     if not config['process_all_images']:
         input_rgb_images_files = input_rgb_images_files[config['dataset_range'][0]:config['dataset_range'][1]]
         input_depth_images_files = input_depth_images_files[config['dataset_range'][0]:config['dataset_range'][1]]
 
-    first = True
 
     # blob_detectot = cv2.SimpleBlobDetector()
     # TODO try using blob detection
@@ -284,4 +292,18 @@ if __name__ == "__main__":
         cv2.imwrite(os.path.join(output_depth_path, "depth%06d.png" % i), dpth)
         cv2.imwrite(os.path.join(output_color_path, "rgb%06d.png" % i), rgb)
     print("finished writing results")
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description="Object reconstruction pipeline launcher")
+    parser.add_argument("--config", help="path to the config file")
+    args = parser.parse_args()
+    config_filename = DEFAULT_CONFIFG_FILENAME
+    if args.config is not None:
+        config_filename = args.config
+
+    config = get_config(config_filename)
+
+    launch_filter_raw_images(config)
 

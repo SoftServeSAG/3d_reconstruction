@@ -12,6 +12,8 @@ from utils.file import check_folder_structure, get_project_root_dir
 from utils.object_reconstruction_config import get_config, specify_config_pathes
 from utils.logs import log_stats, make_stats
 
+from filter_outliers_raw_images import launch_filter_raw_images
+
 PROJECT_NAME = "object_3d_reconstruction"
 DEFAULT_CONFIFG_FILENAME = 'cfg/reconstruction/default/main.json'
 
@@ -35,9 +37,25 @@ if __name__ == "__main__":
     config['project_root'] = project_root
     stats['config']['main'] = config
 
+    if config['preprocessing_images']:
+        preprocessing_cfg_fname = os.path.join( config['project_root'],
+                                                config['preprocessing_config'])
+        preprocessing_cfg = get_config(preprocessing_cfg_fname)
+        stats['config']['preprocessing'] = preprocessing_cfg
+
+        preprocessing_cfg = specify_config_pathes(subconfig=preprocessing_cfg,
+                              main_cfg=config)
+
+        stage_start_time = time.time()
+        launch_filter_raw_images(preprocessing_cfg)
+        stats['exec_time']['preprocessing_images'] = time.time() - stage_start_time
+
+
     if config['reconstruction']:
         reconstruction_args = config['reconstruction_args']
         stats['config']['reconstrunction'] = reconstruction_args
+        reconstruction_cfg = get_config(os.path.join( config['project_root'], reconstruction_args['config']))
+        stats['config']['reconstrunction']['parameters'] = reconstruction_cfg
 
         reconstruction_runner_filename = reconstruction_args['runfile']
         if not os.path.isabs(reconstruction_runner_filename):
@@ -53,7 +71,7 @@ if __name__ == "__main__":
                          'reconstruction.json')
             )
 
-        specify_config_pathes( subconfig_filename=reconstruction_args['config'],
+        specify_config_pathes( subconfig=reconstruction_cfg,
                                main_cfg=config,
                                updated_config_filename=specified_config_filename)
 
