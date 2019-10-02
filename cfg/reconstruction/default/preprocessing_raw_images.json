@@ -1,0 +1,20 @@
+{
+   "name": "preprocessing stage config for sample dataset",
+    "path_dataset": "/home/dkushn/ReconstructionSystem/dataset/test_frog_fast_check/",
+    "path_intrinsic": "/home/dkushn/git/o3d_main/Open3D/examples/Python/ReconstructionSystem/dataset/test_frog/camera_intrinsic.json",
+
+    "debug":  false,
+     "python_multi_threading": true,
+     "use_color_cluster_thresholds": true,
+      "threshold_colored_clusters" : {
+        "n_clusters" : 2,
+        "blob_contour_min_length" : 500
+      },
+     "blobs_len_thresholding": false,
+
+    "depth_dir": "depth_raw/",
+    "color_dir": "color_raw/",
+    "color_result_dir" : "color_filtered/",
+    "depth_result_dir" : "depth_filtered/"
+
+}
