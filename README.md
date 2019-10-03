@@ -23,7 +23,8 @@ git clone --recurse-submodules https://github.com/SoftServeSAG/3d_reconstruction
 1. Download sample dataset using script from /datasets or register own data. # TODO add support for data collection
 1. Run pipeline:
 ```bash
-python run_object_reconstruction.py <full_cfg_filename>.json
+cd <project_git_repo>/src
+python launch_object_reconstruction.py --config <full_cfg_filename>.json
 ```
 
 ---
@@ -137,7 +138,29 @@ Cleaning outlier blobs:
     - Drop frames of bad quality
 
 #### Filtering registration artifacts:
-- TODO: move it here from notes via appropriate branch
+1. **Based on the length of a blob (spot) contour:**
+This approach is the fastest.
+--> Load depth image data in uint16 format
+--> Using thresholding create a mask which will contain the object of interest together with all false registrations
+--> Apply some blur (used Gaussian) to make this mask smoother and filter noisy edges 
+--> Count length of each mask contour.
+--> Leave only one with maximum length (assume that reconstruction target is effectively the biggest one blob captured and all other are noises and artifacts)
+--> Use this mask to drop other elements from color and depth images.
+
+References:
+- (Loading images)[https://stackoverflow.com/questions/10969585/opencv-reading-a-16-bit-grayscale-image]
+- (Blurring)[https://www.opencv-srf.com/2018/03/gaussian-blur.html]
+- (Thresholding)[https://docs.opencv.org/master/d7/d4d/tutorial_py_thresholding.html#gsc.tab=0]
+- (Contour calculation)[https://docs.opencv.org/master/d4/d73/tutorial_py_contours_begin.html#gsc.tab=0]
+
+2. Using K-means clustering for image colours.
+--> Load rgb images
+--> Using k-means ... #TODO
+
+References:
+
+3. Based on Blob-detector - __Not implemented__
+4. Using RGB-D pointcloud - __Not implemented__
 
 #### Improve balance of colour:
 - TODO
