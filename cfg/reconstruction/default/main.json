@@ -10,7 +10,6 @@
 
   "reconstruction" : true,
   "reconstruction_args": {
-
     "runfile" : "Open3D/examples/Python/ReconstructionSystem/run_system.py",
     "config" : "cfg/reconstruction/default/test_frog_fast_prototype.json",
 
@@ -19,5 +18,8 @@
     "refine" : true,
     "integrate" : true,
     "debug_mode" : false
-  }
+  },
+
+  "optimise_colormap": true,
+  "optimise_colormap_config" : "../../cfg/reconstru"
 }

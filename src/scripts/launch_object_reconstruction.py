@@ -89,6 +89,10 @@ if __name__ == "__main__":
                 os.system(exec_line)
                 stats['exec_time']['reconstruction'][stage_name] = time.time() - stage_start_time
 
+
+    if config['colormap_optimise']:
+        pass
+
     log_stats(stats, config)
 
 

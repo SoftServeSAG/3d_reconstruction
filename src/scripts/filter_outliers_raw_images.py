@@ -99,10 +99,6 @@ def filter_pointcloud(depth_image_path, color_image_path, config=None, debug_mod
     pass
 
 
-
-
-
-
 # idea to expect that all artifacts will have the same color and therefore we can drop them out
 def color_based_clustering_masks(image_filename, color_clustering_config, debug_mode = False):
     # from https://www.pyimagesearch.com/2014/07/07/color-quantization-opencv-using-k-means-clustering/
