@@ -12,10 +12,10 @@
   "debug":  false,
   "show_all_results" : false,
 
-  "python_multi_threading": false,
+  "python_multi_threading": true,
 
-  "process_all_images" : true,
-  "dataset_range" : [0, 200],
+  "process_all_images" : false,
+  "dataset_range" : [0, 600],
 
   "color_clusters_thresholding": true,
   "threshold_colored_clusters" : {

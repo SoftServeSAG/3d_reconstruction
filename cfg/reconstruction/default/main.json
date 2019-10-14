@@ -20,6 +20,6 @@
     "debug_mode" : false
   },
 
-  "optimise_colormap": true,
-  "optimise_colormap_config" : "../../cfg/reconstru"
+  "optimize_colormap": false,
+  "optimize_colormap_config" : "cfg/reconstruction/default/colormap_optimization.json"
 }

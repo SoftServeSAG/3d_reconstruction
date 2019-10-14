@@ -13,9 +13,11 @@ from utils.object_reconstruction_config import get_config, specify_config_pathes
 from utils.logs import log_stats, make_stats
 
 from filter_outliers_raw_images import launch_filter_raw_images
+from texture_colormap_optimization import run_colormap_optimisarion
 
 PROJECT_NAME = "object_3d_reconstruction"
 DEFAULT_CONFIFG_FILENAME = 'cfg/reconstruction/default/main.json'
+
 
 if __name__ == "__main__":
 
@@ -90,8 +92,19 @@ if __name__ == "__main__":
                 stats['exec_time']['reconstruction'][stage_name] = time.time() - stage_start_time
 
 
-    if config['colormap_optimise']:
-        pass
+    if config['optimize_colormap']:
+        optimize_colormap_config_filename = os.path.join(config['project_root'],
+                                               config['optimize_colormap_config'])
+        optimize_colormap_config = get_config(optimize_colormap_config_filename)
+        stats['config']['colormap_optimization'] = optimize_colormap_config
+
+        optimize_colormap_config = specify_config_pathes(subconfig=optimize_colormap_config,
+                                                         main_cfg=config)
+
+        stage_start_time = time.time()
+        run_colormap_optimisarion(optimize_colormap_config)
+        stats['exec_time']['colormap_optimization'] = time.time() - stage_start_time
+
 
     log_stats(stats, config)
 

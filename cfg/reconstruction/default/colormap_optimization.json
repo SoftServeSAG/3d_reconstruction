@@ -1,15 +1,15 @@
 {
     "name": "Object 3D reconstruction from RGB and Depth frames using Open3D",
-    "path_dataset": "/home/dkushn/ReconstructionSystem/dataset/test_frog_fast_check/",
-    "path_intrinsic": "/home/dkushn/git/o3d_main/Open3D/examples/Python/ReconstructionSystem/dataset/test_frog/camera_intrinsic.json",
+    "path_dataset": "<place_full_path_here_to_run_standalone>",
+    "path_intrinsic": "<place_full_path_here_to_run_standalone>",
     "mesh_file": "scene/integrated.ply",
     "debug":  true,
 
-    "fragments_dir": "fragments_cuda/",
+    "fragments_dir": "fragments/",
     "fragments_template": "fragment_optimized_{}.json",
-    "global_registration_trajectory": "global_registration_refined_optimized.json",
+    "global_registration_trajectory": "global_registration_optimized.json",
 
-    "scene_dir": "scene_cuda/",
+    "scene_dir": "scene/",
     "store_result_path": "scene/",
     "depth_dir": "depth/",
     "color_dir": "color/",

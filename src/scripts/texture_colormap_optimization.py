@@ -36,15 +36,14 @@ def posegraph_to_trajectory(posegraph, intrinsic, to_invert):
     return pinhole_camera_trajectory
 
 
-DEFAULT_CONFIGURE_FILE = "../../cfg/reconstruction/default/colormap_optimization.json"
+DEFAULT_CONFIFG_FILENAME = "../../cfg/reconstruction/default/colormap_optimization.json"
 # DEFAULT_CONFIGURE_FILE = "../cfg/reconstruction_pipeline_configs/filtering_obsolete_mesh_elements.json"
 
 def get_trajectory():
     pass
 
-if __name__ == "__main__":
 
-    config = get_config(DEFAULT_CONFIGURE_FILE)
+def run_colormap_optimisarion(config):
 
     debug_mode = config['debug']
     if debug_mode:
@@ -62,10 +61,10 @@ if __name__ == "__main__":
 
 
     fragments_image_path = get_file_list(os.path.join(path, fragments_dir),
-                                     extension=".json")
-
+                                         extension=".json")
     fragments_image_path = filter( lambda x: "optimized" in x ,fragments_image_path)
-
+    mesh_filename = os.path.join(path, config['mesh_file'])
+    assert os.path.exists(mesh_filename), "mesh file [{}] failed to detect".format(mesh_filename)
 
     # read posegraph
     posegraph_path = os.path.join(path, fragments_dir, fragments_template.format("000"))
@@ -100,8 +99,8 @@ if __name__ == "__main__":
     local_pinhole_cam_trajectory = pinhole_camera_trajectory_shifted
 
     # OUR GOAL OBJECT
-    mesh_filename = os.path.join(path, config['mesh_file'])
-    assert os.path.exists(mesh_filename), "mesh file [{}] failed to detect".format(mesh_filename)
+
+
     mesh = o3d.io.read_triangle_mesh(mesh_filename)
     o3d.visualization.draw_geometries([mesh])
 
@@ -112,7 +111,7 @@ if __name__ == "__main__":
                                      extension=".png")
     print(depth_image_path)
     color_image_path = get_file_list(os.path.join(path, color_dir),
-                                     extension=".png")
+                                     extension=".jpg")
     assert (len(depth_image_path) == len(color_image_path))
     first = True
     for i in range(len(depth_image_path)):
@@ -151,14 +150,14 @@ if __name__ == "__main__":
     o3d.io.write_triangle_mesh(
         os.path.join(path, store_results_dir, "color_map_after_optimization_nonrigid.ply"), mesh)
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Object reconstruction pipeline launcher")
+    parser.add_argument("--config", help="path to the config file")
+    args = parser.parse_args()
+    config_filename = DEFAULT_CONFIFG_FILENAME
+    if args.config is not None:
+        config_filename = args.config
 
-# parser = argparse.ArgumentParser(description="Object reconstruction pipeline launcher")
-#     parser.add_argument("--config", help="path to the config file")
-#     args = parser.parse_args()
-#     config_filename = DEFAULT_CONFIFG_FILENAME
-#     if args.config is not None:
-#         config_filename = args.config
-#
-#     config = get_config(config_filename)
-#
-#     launch_filter_raw_images(config)
+    config = get_config(config_filename)
+
+    run_colormap_optimisarion(config)

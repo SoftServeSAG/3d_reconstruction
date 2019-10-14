@@ -202,7 +202,7 @@ def list_dataset_files(config):
 
     return color_im_filenames, depth_im_filenames
 
-DEFAULT_CONFIFG_FILENAME = '../../cfg/reconstruction/default/preprocessing_dataset.json'
+DEFAULT_CONFIFG_FILENAME = 'cfg/reconstruction/default/preprocessing_dataset.json'
 
 
 def launch_filter_raw_images(config):
@@ -286,7 +286,7 @@ def launch_filter_raw_images(config):
     print("started writing results")
     for i, (rgb, dpth) in enumerate(zip(masked_color_images, masked_depth_images)):
         cv2.imwrite(os.path.join(output_depth_path, "depth%06d.png" % i), dpth)
-        cv2.imwrite(os.path.join(output_color_path, "rgb%06d.png" % i), rgb)
+        cv2.imwrite(os.path.join(output_color_path, "rgb%06d.jpg" % i), rgb)
     print("finished writing results")
 
 
