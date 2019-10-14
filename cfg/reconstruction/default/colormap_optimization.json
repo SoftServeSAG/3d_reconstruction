@@ -7,7 +7,7 @@
 
     "fragments_dir": "fragments/",
     "fragments_template": "fragment_optimized_{}.json",
-    "global_registration_trajectory": "global_registration_optimized.json",
+    "global_registration_trajectory_filename": "global_registration_optimized.json",
 
     "scene_dir": "scene/",
     "store_result_path": "scene/",

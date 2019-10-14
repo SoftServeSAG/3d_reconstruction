@@ -64,36 +64,6 @@ def make_masks_from_countures_for_loop(depth_images_filenames):
         masks.append(mask)
     return masks
 
-
-def read_rgbd_images(depth_image_path, color_image_path, config=None, debug_mode = False):
-    if config is None:
-        config = {"": ""}
-    color_images = []
-    depth_images = []
-    rgbd_images = []
-    camera_intrinsics = o3d.io.read_pinhole_camera_intrinsic(
-        config["path_intrinsic"])
-    first = False
-    for i in range( 1 ):
-        print(os.path.join(depth_image_path[i]))
-        depth = o3d.io.read_image(os.path.join(depth_image_path[i]))
-        depth_images.append(depth)
-        color = o3d.io.read_image(os.path.join(color_image_path[i]))
-        color_images.append(color)
-        rgbd_image = o3d.geometry.RGBDImage.create_from_color_and_depth(
-            color, depth, convert_rgb_to_intensity=False)
-
-        if debug_mode and first:
-            first = False
-            pcd = o3d.geometry.PointCloud.create_from_rgbd_image(
-                rgbd_image,
-                o3d.camera.PinholeCameraIntrinsic(camera_intrinsics))
-            o3d.visualization.draw_geometries([pcd])
-
-        rgbd_images.append(rgbd_image)
-    return rgbd_images
-
-
 # TODO try adding RGBD preprocessing to this stage instead of processing integrated image
 def filter_pointcloud(depth_image_path, color_image_path, config=None, debug_mode = False):
     pass

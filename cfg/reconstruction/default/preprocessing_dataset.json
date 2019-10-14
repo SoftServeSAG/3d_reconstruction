@@ -14,8 +14,8 @@
 
   "python_multi_threading": true,
 
-  "process_all_images" : false,
-  "dataset_range" : [0, 600],
+  "process_all_images" : true,
+  "dataset_range" : [0, 800],
 
   "color_clusters_thresholding": true,
   "threshold_colored_clusters" : {
