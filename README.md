@@ -23,7 +23,8 @@ git clone --recurse-submodules https://github.com/SoftServeSAG/3d_reconstruction
 1. Download sample dataset using script from /datasets or register own data. # TODO add support for data collection
 1. Run pipeline:
 ```bash
-python run_object_reconstruction.py <full_cfg_filename>.json
+cd <project_git_repo>/src
+python launch_object_reconstruction.py --config <full_cfg_filename>.json
 ```
 
 ---
@@ -128,16 +129,50 @@ Perform recording of good data with hand-held RGB-D camera is tricky but possibl
  
 ## Preprocessing images
 
-Cleaning outlier blobs:
-<!--  <Show images with filtering and failcase without it> -->
+- ### TODO add images representing effect
+- Cleaning outlier blobs:
+
     In the process of reconstruction using "invisible material" reconstruction does not require filtering background and preprocessing suppose to be omitted. But as a real-world working environment is always imperfect, due to lighting conditions, using the material, its angle, and wrinkles some parts of it are occasionally captured. Those non-informative artifacts harm reconstruction pipeline as if they belong to reconstruction fragments they can make the resulting matching impossible.
+    
     As background generally clearly distinguishable from the object itself we can manage it with a pretty straightforward pipeline of preprocessing methods. 
-    - Filtering registration artifacts
-    - Improve the balance of color
-    - Drop frames of bad quality
 
 #### Filtering registration artifacts:
-- TODO: move it here from notes via appropriate branch
+1. **Based on the length of a blob (spot) contour:**
+This approach is the fastest.
+
+   1. Load depth image data in uint16 format
+   1. Using thresholding create a mask which will contain the object of interest together with all false registrations
+   1. Apply some blur (used Gaussian) to make this mask smoother and filter noisy edges 
+   1. Compute length of each mask contour.
+   1. Leave only one with maximum length (assume that reconstruction target is effectively the biggest one blob captured and all other are noises and artifacts)
+   1. Use this mask to drop other elements from color and depth images.
+
+References:
+- [Loading images](https://stackoverflow.com/questions/10969585/opencv-reading-a-16-bit-grayscale-image)
+- [Blurring](https://www.opencv-srf.com/2018/03/gaussian-blur.html)
+- [Thresholding](https://docs.opencv.org/master/d7/d4d/tutorial_py_thresholding.html#gsc.tab=0)
+- [Contour calculation](https://docs.opencv.org/master/d4/d73/tutorial_py_contours_begin.html#gsc.tab=0)
+
+2. The K-means clustering for image colors.
+
+   1. Load colored images
+   1. Transform them from the RBG domain to other, a.e. LaB domain, where the euclidian distance in the colorspace corresponds to perceptual meaning.
+   1. Using the k-means algorithm to cluster point by color into several separate clusters.
+        
+        _When we use a black light-absorbing canvas background, the regions where the absorption is good and the image contains 0 as color values. Black parts of the canvas which were registered overall tend to be clustered together with those parts, then with pixels representing target object itself._
+   1. Select all the pixels except the biggest one (which is presumably background and noise).
+   1. Apply some blurring to make the edges smooth.
+   1. Take blobs borders via selection, only the outer border.
+   1. Use space within those borders as the mask for selection.
+
+References:
+- [K-means clustering](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html)
+- [Colorspace transformation](https://www.learnopencv.com/color-spaces-in-opencv-cpp-python/)
+- [Blurring](https://docs.opencv.org/2.4/doc/tutorials/imgproc/gausian_median_blur_bilateral_filter/gausian_median_blur_bilateral_filter.html)
+- [Select outermost borders](https://docs.opencv.org/3.4/d9/d8b/tutorial_py_contours_hierarchy.html)
+
+3. Based on Blob-detector - __Not implemented__
+4. Using RGB-D pointcloud - __Not implemented__
 
 #### Improve balance of colour:
 - TODO
