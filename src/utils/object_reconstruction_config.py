@@ -18,11 +18,8 @@ def get_config(config_filename):
         return config
 
 
-def specify_config_pathes(subconfig_filename, main_cfg, updated_config_filename):
-    if not os.path.isabs(subconfig_filename):
-        subconfig_filename = os.path.join(main_cfg['project_root'], subconfig_filename)
+def specify_config_pathes(subconfig, main_cfg, updated_config_filename=''):
 
-    subconfig = get_config(subconfig_filename)
     subconfig['path_dataset'] = os.path.join( main_cfg['project_root'],
                                                        main_cfg['path_dataset']
                                                        )
@@ -30,6 +27,7 @@ def specify_config_pathes(subconfig_filename, main_cfg, updated_config_filename)
     subconfig['path_intrinsic'] = os.path.join( main_cfg['project_root'],
                                                          main_cfg['path_intrinsic']
                                                          )
-
-    with open(updated_config_filename, 'w') as json_file:
-        json.dump(subconfig, json_file, indent=4, sort_keys=True)
+    if len(updated_config_filename) != 0:
+        with open(updated_config_filename, 'w') as json_file:
+            json.dump(subconfig, json_file, indent=4, sort_keys=True)
+    return subconfig

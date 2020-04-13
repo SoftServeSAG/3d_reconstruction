@@ -1,0 +1,27 @@
+{
+  "name": "preprocessing stage config for sample dataset",
+
+  "path_dataset": "<place_full_path_here_to_run_standalone>",
+  "path_intrinsic": "<place_full_path_here_to_run_standalone>",
+
+  "depth_input_dir": "depth_raw/",
+  "color_input_dir": "color_raw/",
+  "color_result_dir" : "color/",
+  "depth_result_dir" : "depth/",
+
+  "debug":  false,
+  "show_all_results" : false,
+
+  "python_multi_threading": true,
+
+  "process_all_images" : true,
+  "dataset_range" : [0, 800],
+
+  "color_clusters_thresholding": true,
+  "threshold_colored_clusters" : {
+    "n_clusters" : 2,
+    "blob_contour_min_length" : 500
+  },
+
+  "blobs_border_len_thresholding": false
+}

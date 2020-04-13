@@ -1,0 +1,19 @@
+{
+    "name": "Object 3D reconstruction from RGB and Depth frames using Open3D",
+    "path_dataset": "<place_full_path_here_to_run_standalone>",
+    "path_intrinsic": "<place_full_path_here_to_run_standalone>",
+    "mesh_file": "scene/integrated.ply",
+    "debug":  true,
+
+    "fragments_dir": "fragments/",
+    "fragments_template": "fragment_optimized_{}.json",
+    "global_registration_trajectory_filename": "global_registration_optimized.json",
+
+    "scene_dir": "scene/",
+    "store_result_path": "scene/",
+    "depth_dir": "depth/",
+    "color_dir": "color/",
+
+    "max_iters": 10,
+    "use_nonrigid": true
+}

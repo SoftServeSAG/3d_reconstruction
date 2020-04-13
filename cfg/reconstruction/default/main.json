@@ -5,9 +5,11 @@
   "path_dataset": "datasets/published_test_frog/",
   "path_intrinsic": "datasets/published_test_frog/camera_intrinsic.json",
 
+  "preprocessing_images" : true,
+  "preprocessing_config": "cfg/reconstruction/default/preprocessing_dataset.json",
+
   "reconstruction" : true,
   "reconstruction_args": {
-
     "runfile" : "Open3D/examples/Python/ReconstructionSystem/run_system.py",
     "config" : "cfg/reconstruction/default/test_frog_fast_prototype.json",
 
@@ -16,5 +18,8 @@
     "refine" : true,
     "integrate" : true,
     "debug_mode" : false
-  }
+  },
+
+  "optimize_colormap": false,
+  "optimize_colormap_config" : "cfg/reconstruction/default/colormap_optimization.json"
 }
